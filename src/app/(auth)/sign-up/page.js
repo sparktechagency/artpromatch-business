@@ -2,7 +2,7 @@
 /* eslint-disable react/no-unescaped-entities */
 
 import { AllImages } from '@/assets/images/AllImages';
-import { Checkbox, Form, Input, Typography } from 'antd';
+import {  Form, Input, Typography } from 'antd';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';

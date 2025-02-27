@@ -10,7 +10,7 @@ import { AllImages } from "@/assets/images/AllImages";
 
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { AiOutlineMessage } from "react-icons/ai";
-// import NotificationModal from "@/components/WithNavFooterComponents/HomeComponents/Modals/NotificationsModal/NotificationModal";
+import NotificationModal from "@/components/WithNavFooterComponents/HomeComponents/Modals/NotificationsModal/NotificationModal";
 import { useRouter } from "next/navigation";
 
 const NavBar = () => {
@@ -110,7 +110,7 @@ const NavBar = () => {
 
           {isLogin ? (
             <div className="hidden lg:flex items-center space-x-4">
-              <IoIosNotificationsOutline className="h-5 w-5" />
+              <IoIosNotificationsOutline onClick={showModalForNotification} className="h-5 w-5" />
               <Link href="/message">
                 <AiOutlineMessage className="h-5 w-5" />
               </Link>
@@ -169,9 +169,24 @@ const NavBar = () => {
               </Link>
             ))}
             {isLogin ? (
+              <div className="flex flex-col justify-center items-center space-y-4">
+              <IoIosNotificationsOutline onClick={showModalForNotification} className="h-5 w-5" />
+              <Link href="/message">
+                <AiOutlineMessage className="h-5 w-5" />
+              </Link>
+              <Link href="/user-profile-page">
+                <Image
+                  src={AllImages.user}
+                  alt="user"
+                  height={40}
+                  width={40}
+                  className="h-10 w-10 rounded-full"
+                />
+              </Link>
               <button onClick={handleLogout} className="text-red-500">
                 Logout
               </button>
+            </div>
             ) : (
               <>
                 <button
@@ -190,6 +205,9 @@ const NavBar = () => {
           </div>
         </Drawer>
       </nav>
+      <Modal open={isModalOpenForNotification} onOk={handleCancelForNotification} onCancel={handleCancelForNotification}>
+        <NotificationModal></NotificationModal>
+      </Modal>
     </div>
   );
 };

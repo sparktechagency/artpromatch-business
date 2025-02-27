@@ -50,7 +50,7 @@ const PieChartComponent = () => {
     // TODO: Add a custom tooltip
 
     return (
-        <div className="w-full md:h-[420px]">
+        <div className="w-full h-[300px] md:h-[420px]">
             <h1 className="text-3xl font-bold">Earnings Overview</h1>
             <ResponsiveContainer width="100%" height="100%">
                 <PieChart>

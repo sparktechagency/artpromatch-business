@@ -9,13 +9,13 @@ import { MdNotificationsActive } from "react-icons/md";
 const ArtistHomePage = () => {
     return (
         <div className=' '>
-            <div className='flex flex-col md:flex-row justify-between items-center 
+            <div className='flex flex-col md:flex-row justify-center  md:justify-between items-center 
             md:mt-16 md:mb-10'>
                 <div className='flex flex-col md:flex-row justify-start items-center gap-3'>
                     <Link href="/business-profile">
                         <Image src={AllImages.user} width={50} height={50} alt='logo'></Image>
                     </Link>
-                    <div>
+                    <div className='mb-2'>
                         <h1> Welcome Back, Rivera Ink Studio!</h1>
                         <p className='text-textSecondary'>Here’s an overview of your studio’s performance and activities today.</p>
                     </div>

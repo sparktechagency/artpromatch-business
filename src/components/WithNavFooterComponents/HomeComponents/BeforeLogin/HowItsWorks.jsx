@@ -28,7 +28,7 @@ const steps = [
 
 const HowItsWorks = () => {
   return (
-    <div className=" md:relative bg-primary text-white py-16 px-6 md:px-16 lg:px-14 h-auto md:h-[600px] rounded-xl">
+    <div className="mt-10 md:mt-0 md:relative bg-primary text-white py-16 px-6 md:px-16 lg:px-14 h-auto md:h-[600px] rounded-xl">
       <Image
         src={AllImages.hi}
         width={0}

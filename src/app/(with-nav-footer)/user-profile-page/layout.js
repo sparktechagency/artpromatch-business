@@ -7,6 +7,7 @@ import { MenuOutlined } from "@ant-design/icons";
 import Image from "next/image";
 import { FaTrash, FaUpload } from "react-icons/fa6";
 import { AllImages } from "@/assets/images/AllImages";
+import { FaHamburger } from "react-icons/fa";
 
 const UserDashboardLayout = ({ children }) => {
   const [activeTab, setActiveTab] = useState("");
@@ -47,13 +48,12 @@ const UserDashboardLayout = ({ children }) => {
   return (
     <div className="container mx-auto mt-20 px-2 md:px-0">
       <div className="my-5 w-full flex flex-col md:flex-row">
-        <Button
-          className="md:hidden mb-4"
-          icon={<MenuOutlined />}
+        <button
+          className=" mb-4  flex justify-center items-center gap-2 border border-primary py-3 px-5 rounded-lg md:hidden"
           onClick={() => setOpen(true)}
         >
-          Menu
-        </Button>
+        <FaHamburger/>  Menu
+        </button>
 
         <div className="hidden md:block md:w-[30%]">
           <h1 className="text-xl font-bold mb-2">Profile Information</h1>

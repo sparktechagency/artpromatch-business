@@ -118,7 +118,7 @@ const AvailablityPage = () => {
           title="Set Time Off / Manually Booked Hours"
           extra={
             <Link
-              href="/block-new-date"
+              href=""
               className="text-primary hover:text-primary font-bold"
             >
               Block New Date

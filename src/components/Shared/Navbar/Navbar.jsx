@@ -12,6 +12,7 @@ import { IoIosNotificationsOutline } from "react-icons/io";
 import { AiOutlineMessage } from "react-icons/ai";
 import NotificationModal from "@/components/WithNavFooterComponents/HomeComponents/Modals/NotificationsModal/NotificationModal";
 import { useRouter } from "next/navigation";
+import { CiHeart } from "react-icons/ci";
 
 const NavBar = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -110,6 +111,8 @@ const NavBar = () => {
 
           {isLogin ? (
             <div className="hidden lg:flex items-center space-x-4">
+              <Link href="favourites">
+              <CiHeart className="h-5 w-5 cursor-pointer"/></Link>
               <IoIosNotificationsOutline onClick={showModalForNotification} className="h-5 w-5" />
               <Link href="/message">
                 <AiOutlineMessage className="h-5 w-5" />

@@ -1,5 +1,7 @@
 
-import ProfileSidebar from '@/components/WithNavFooterComponents/OtherArtistProfile/ProfileSIdebar';
+
+
+import ProfileSidebar from '@/components/WithNavFooterComponents/OtherArtistProfile/ProfileSidebar';
 import TattoArtistProfile from '@/components/WithNavFooterComponents/OtherArtistProfile/TattoArtistProfile';
 import React from 'react';
 

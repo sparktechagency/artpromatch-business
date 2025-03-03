@@ -34,7 +34,7 @@ const HowItsWorks = () => {
         width={0}
         height={0}
         alt="logo"
-        className="hidden md:block w-full h-auto absolute -top-2   "
+        className="hidden md:block w-full h-auto absolute -top-2  px-20 py-5 "
       ></Image>
 
       <div className="md:absolute md:top-20 md:left-[20%] md:transform md:-translate-x-1/2 

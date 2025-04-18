@@ -177,7 +177,7 @@ const NavBar = () => {
               <Link href="/message">
                 <AiOutlineMessage className="h-5 w-5" />
               </Link>
-              <Link href="/user-profile-page">
+              <Link href="/business-profile">
                 <Image
                   src={AllImages.user}
                   alt="user"

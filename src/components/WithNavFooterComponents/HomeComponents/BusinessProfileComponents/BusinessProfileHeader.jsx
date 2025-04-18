@@ -21,8 +21,9 @@ const BusinessProfileHeader = () => {
                         <Select.Option value="tom">Tom</Select.Option>
                         <Select.Option value="tom">tom</Select.Option>
                     </Select>
+                    <Link href="/discover">
                     <button className='px-4 py-2 rounded-xl border flex justify-center items-center gap-2 bg-black text-white'>Add Resident Artist</button>
-
+                    </Link>
                     <Link href="/guest-spots">
                         <button className='px-4 py-2 rounded-xl  flex justify-center items-center gap-2 border bg-primary text-white'>Add Guest Spot</button>
                     </Link>

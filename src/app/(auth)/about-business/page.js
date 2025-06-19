@@ -16,6 +16,7 @@ const AboutBusiness = () => {
   const city = "Delhi";
   const router = useRouter();
   const onFinish = (values) => {
+    // localStorage.setItem("role", JSON.stringify(values.role));
     localStorage.setItem("studioName", JSON.stringify(values.studioName));
     localStorage.setItem("businessType", JSON.stringify(values.businessType));
     localStorage.setItem(
@@ -26,8 +27,16 @@ const AboutBusiness = () => {
     localStorage.setItem("city", JSON.stringify(city));
     localStorage.setItem("contactNumber", JSON.stringify(values.contactNumber));
     localStorage.setItem("contactEmail", JSON.stringify(values.contactEmail));
+
+    // console.log("studioName", values.studioName);
+    // console.log("businessType", values.businessType);
+    // console.log("servicesOffered", values.servicesOffered);
+    // console.log("location", location);
+    // console.log("city", city);
+    // console.log("contactNumber", values.contactNumber);
+    // console.log("contactEmail", values.contactEmail);
+
     router.push("/operating-hours");
-    // /operating-hours
   };
   return (
     <div className="py-16 md:py-0 h-[100vh] w-full flex items-center justify-center ">
@@ -57,7 +66,7 @@ const AboutBusiness = () => {
                 </Typography.Text>
               </div>
               <Form.Item
-                name="business-name"
+                name="studioName"
                 label={<p className=" text-md">Business Name</p>}
                 style={{ width: "90%", margin: "auto", marginBottom: "10px" }}
               >
@@ -69,17 +78,17 @@ const AboutBusiness = () => {
                 />
               </Form.Item>
               <Form.Item
-                name="business-type"
+                name="businessType"
                 label={<p className="px-6 text-md">Business Type</p>}
               >
                 <div className="flex flex-col gap-4 w-full px-6">
-                  <Radio value={"studio"}>
+                  <Radio value={"Studio"}>
                     <h1 className="text-textSecondary">Studio</h1>
                   </Radio>
-                  <Radio value={"event-organizer"}>
+                  <Radio value={"Event Organizer"}>
                     <h1 className="text-textSecondary">Event Organizer</h1>
                   </Radio>
-                  <Radio value={"both"}>
+                  <Radio value={"Both"}>
                     <h1 className="text-textSecondary">Both</h1>
                   </Radio>
                 </div>
@@ -131,7 +140,7 @@ const AboutBusiness = () => {
                 />
               </Form.Item>
               <Form.Item
-                name="phone-number"
+                name="contactNumber"
                 label={<p className=" text-md">Phone Number</p>}
                 style={{ width: "90%", margin: "auto", marginBottom: "10px" }}
               >
@@ -143,7 +152,7 @@ const AboutBusiness = () => {
                 />
               </Form.Item>
               <Form.Item
-                name="email"
+                name="contactEmail"
                 label={<p className=" text-md">Email Address</p>}
                 style={{ width: "90%", margin: "auto", marginBottom: "10px" }}
               >

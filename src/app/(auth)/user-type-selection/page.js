@@ -48,10 +48,10 @@ const UserTypeSelection = () => {
   };
 
   const handleNext = () => {
+    localStorage.setItem("role", JSON.stringify(selectedRole?.label));
     router.push(`/user-welcome`);
-    localStorage.setItem("role", selectedRole?.label);
   };
-  localStorage.setItem("role", selectedRole?.label);
+
   return (
     <div className="py-16 md:py-0 h-[100vh] w-full flex items-center justify-center">
       <div className="pt-32 pb-16">

@@ -30,7 +30,7 @@ const SignUp = () => {
         router.push("/account-verification");
       })
       .catch((error) => {
-        message.error(error?.message);
+        message.error(error?.data?.message);
       });
   };
   return (

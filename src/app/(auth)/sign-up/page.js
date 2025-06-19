@@ -7,13 +7,14 @@ import { useSignUpMutation } from "@/redux/features/auth/authApi";
 import { Form, Input, message, Typography } from "antd";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 const SignUp = () => {
+  const router = useRouter();
   const [signUp] = useSignUpMutation();
-  const onFinish = (values) => {
-    // console.log(values);
 
+  const onFinish = (values) => {
     const userInfo = {
       fullName: values.name,
       email: values.email,
@@ -118,14 +119,12 @@ const SignUp = () => {
               </Link>
             </p>
             <Form.Item className="text-center">
-    
-                <button
-                  className="bg-primary w-full px-6 py-2 rounded-md text-white"
-                  htmlType="submit"
-                >
-                  Create Account
-                </button>
-        
+              <button
+                className="bg-primary w-full px-6 py-2 rounded-md text-white"
+                htmlType="submit"
+              >
+                Create Account
+              </button>
             </Form.Item>
             <p className="text-center my-6"> Or Sign up with</p>
             <Form.Item className="text-center">

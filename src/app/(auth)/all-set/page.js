@@ -30,7 +30,7 @@ const AllSet = () => {
                                 </Typography.Text>
                             </div>
 
-                            <Link href="/">
+                            <Link href="/dashboard">
                                 <button className='w-full bg-primary text-white py-3 rounded-lg mt-5'>Go To Dashboard</button>
                             </Link>
                         </Form>

@@ -11,6 +11,7 @@ import React, { use } from "react";
 
 const AboutBusiness = () => {
   const location = {
+    type: "Point",
     coordinates: [77.0451, 28.7041],
   };
   const city = "Delhi";

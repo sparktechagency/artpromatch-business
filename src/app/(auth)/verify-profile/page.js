@@ -42,7 +42,7 @@ const VerifyProfile = () => {
       contactEmail: contactEmail,
       operatingHours: operatingHours,
     };
-    // console.log(data);
+    console.log(data);
 
     // return
     const formData = new FormData();
@@ -57,7 +57,7 @@ const VerifyProfile = () => {
       .then((res) => {
         console.log("res", res);
         message.success(res?.message);
-        Router.push("/user-welcome");
+        Router.push("/all-set");
       })
       .catch((err) => {
         console.log("err", err);

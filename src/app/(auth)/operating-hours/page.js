@@ -4,7 +4,6 @@ import { Form, TimePicker, Typography } from "antd";
 import Image from "next/image";
 import React, { use } from "react";
 import dayjs from "dayjs";
-import { CiClock2 } from "react-icons/ci";
 import { useRouter } from "next/navigation";
 
 const days = [
@@ -77,7 +76,25 @@ const OperatingHours = () => {
                     <Form.Item
                       name={`${day.toLowerCase()}End`}
                       noStyle
-                      rules={[{ required: true, message: "End time required" }]}
+                      rules={[
+                        { required: true, message: "End time required" },
+                        ({ getFieldValue }) => ({
+                          validator(_, value) {
+                            const startTime = getFieldValue(
+                              `${day.toLowerCase()}Start`
+                            );
+                            if (!startTime || !value) {
+                              return Promise.resolve(); 
+                            }
+                            if (dayjs(value).isAfter(dayjs(startTime))) {
+                              return Promise.resolve();
+                            }
+                            return Promise.reject(
+                              new Error("End time must be after start time.")
+                            );
+                          },
+                        }),
+                      ]}
                     >
                       <TimePicker format="HH:mm" />
                     </Form.Item>

@@ -2,20 +2,47 @@
 "use client";
 
 import { AllImages } from "@/assets/images/AllImages";
+import Map from "@/components/Map/Map";
 import { Checkbox, Form, Input, Radio, Typography } from "antd";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { use } from "react";
+import React, { useState } from "react";
+import { FaLocationArrow } from "react-icons/fa6";
 
 const AboutBusiness = () => {
-  const location = {
-    type: "Point",
-    coordinates: [77.0451, 28.7041],
-  };
-  const city = "Delhi";
+  const [value, setValue] = useState(8);
+  const [current, setCurrent] = useState(0);
+  const [location, setLocation] = useState(null);
+
+  console.log("location", location);
   const router = useRouter();
+
+  const handleUseCurrentLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const { latitude, longititude } = pos.coords;
+          const data = {
+            type: "Point",
+            coordinates: [latitude, longititude],
+          };
+          setLocation({
+            lat: latitude,
+            lng: longititude,
+          });
+          localStorage.setItem("location", JSON.stringify(data));
+        },
+        (err) => {
+          console.err("Geolocation Error: ", err.message);
+          alert("Failed to get your location. Please allow location access.");
+        }
+      );
+    } else {
+      alert("geolocation is not supported by your browser");
+    }
+  };
+
   const onFinish = (values) => {
     // localStorage.setItem("role", JSON.stringify(values.role));
     localStorage.setItem("studioName", JSON.stringify(values.studioName));
@@ -25,17 +52,9 @@ const AboutBusiness = () => {
       JSON.stringify(values.servicesOffered)
     );
     localStorage.setItem("location", JSON.stringify(location));
-    localStorage.setItem("city", JSON.stringify(city));
+    localStorage.setItem("city", JSON.stringify(values.city));
     localStorage.setItem("contactNumber", JSON.stringify(values.contactNumber));
     localStorage.setItem("contactEmail", JSON.stringify(values.contactEmail));
-
-    // console.log("studioName", values.studioName);
-    // console.log("businessType", values.businessType);
-    // console.log("servicesOffered", values.servicesOffered);
-    // console.log("location", location);
-    // console.log("city", city);
-    // console.log("contactNumber", values.contactNumber);
-    // console.log("contactEmail", values.contactEmail);
 
     router.push("/operating-hours");
   };
@@ -109,35 +128,66 @@ const AboutBusiness = () => {
                   <Checkbox value="Other">Other</Checkbox>
                 </Checkbox.Group>
               </Form.Item>
-              {/* <Form.Item
-                                name="services-offered"
-                                label={<p className="px-6 text-md">Services Offered</p>}
-                            >
-                                <div className='flex flex-col gap-4 w-full px-6'>
-                                    <Radio value={"tattoo-spaces"}>
-                                        <h1 className='text-textSecondary'>Tattoo Spaces for Guest/Resident artists</h1>
-                                    </Radio>
-                                    <Radio value={"piercing-rooms"} >
-                                        <h1 className='text-textSecondary'>Piercing Rooms for Guest/Resident artists</h1>
-                                    </Radio>
-                                    <Radio  value={"events"}>
-                                        <h1 className='text-textSecondary'>Events</h1>
-                                    </Radio>
-                                    <Radio value={"other"}>
-                                        <h1 className='text-textSecondary'>Other</h1>
-                                    </Radio>
-                                </div>
-                            </Form.Item> */}
+
               <Form.Item
                 name="primary-location"
                 label={<p className=" text-md">Primary Location</p>}
+                style={{ width: "90%", margin: "auto", marginBottom: "10px" }}
+              >
+                {/* <Input
+                  required
+                  style={{ padding: "6px" }}
+                  className=" text-md"
+                  placeholder="Your Primary Location"
+                /> */}
+                <button
+                  type="button"
+                  onClick={handleUseCurrentLocation}
+                  className="flex justify-center items-center gap-2 text-primary border border-primary w-full py-2 rounded-xl"
+                >
+                  <FaLocationArrow />
+                  {location ? (
+                    <p className="text-sm">
+                      {location.lat}, {location.lng}
+                    </p>
+                  ) : (
+                    <p className="text-sm">Use my current location</p>
+                  )}
+                  {location && <Map location={location} />}
+                </button>
+              </Form.Item>
+
+              {/* <Form.Item name="location">
+                <button
+                  type="button"
+                  onClick={handleUseCurrentLocation}
+                  className="flex justify-center items-center gap-2 text-primary border border-primary w-full py-2 rounded-xl"
+                >
+                  <FaLocationArrow />
+                  {location ? (
+                    <p className="text-sm">
+                      {location.lat}, {location.lng}
+                    </p>
+                  ) : (
+                    <p className="text-sm">Use my current location</p>
+                  )}
+                  {location && <Map location={location} />}
+                </button>
+
+                <Map />
+              </Form.Item> */}
+
+
+              <Form.Item
+                name="city"
+                label={<p className=" text-md">City</p>}
                 style={{ width: "90%", margin: "auto", marginBottom: "10px" }}
               >
                 <Input
                   required
                   style={{ padding: "6px" }}
                   className=" text-md"
-                  placeholder="Your Primary Location"
+                  placeholder="Your City"
                 />
               </Form.Item>
               <Form.Item

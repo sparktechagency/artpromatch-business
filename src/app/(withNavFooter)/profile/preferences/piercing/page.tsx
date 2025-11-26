@@ -1,5 +1,6 @@
 'use client';
 
+import { expertisePiercingsServicesList } from '@/constants';
 import { Form } from 'antd';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -15,59 +16,6 @@ const PiercingPage = () => {
       );
     }
   }, [selectedPiercing]);
-
-  const preferredPiercing: string[] = [
-    'Earlobe',
-    'Transverse Lobe',
-    'Helix',
-    'Triple Helix',
-    'Forward Helix',
-    'Anti-Helix',
-    'Snug',
-    'Industrial',
-    'Daith',
-    'Rook',
-    'Conch',
-    'Tragus',
-    'Anti-Tragus',
-    'Nostril',
-    'High Nostril',
-    'Septum',
-    'Septril',
-    'Nasallang',
-    'Bridge',
-    'Eyebrow',
-    'Navel',
-    'Floating Navel',
-    'Nipple',
-    'Tongue',
-    'Frenum (Oral)',
-    'Cheek',
-    'Lip',
-    'Labret',
-    'Vertical Labret',
-    'Inverse Vertical Labret',
-    'Philtrum',
-    'Surface Piercing',
-    'Frenum (Genital)',
-    'PA (Genital)',
-    'Reverse PA (Genital)',
-    'Apadravya (Genital)',
-    'Ampallang (Genital)',
-    'Hafada (Genital)',
-    'Dydoe (Genital)',
-    'Lorum (Genital)',
-    'Guiche (Genital)',
-    'Pubic (Genital)',
-    'Christina (Genital)',
-    'Hood (Genital)',
-    'Triangle (Genital)',
-    'Inner Labia (Genital)',
-    'Outer Labia (Genital)',
-    'Fourchette (Genital)',
-    'Princess Albertina (Genital)',
-    'Tooth Gems',
-  ];
 
   const handleSelect = (value: string) => {
     setSelectedPiercing(prev =>
@@ -92,13 +40,13 @@ const PiercingPage = () => {
       >
         <div className="flex flex-col gap-4">
           {Array.from(
-            { length: Math.ceil(preferredPiercing.length / 7) },
+            { length: Math.ceil(expertisePiercingsServicesList.length / 7) },
             (_, i) => (
               <div
                 key={i}
                 className="flex justify-start items-center gap-4 flex-wrap"
               >
-                {preferredPiercing
+                {expertisePiercingsServicesList
                   .slice(i * 7, i * 7 + 7)
                   .map((piercing: string) => (
                     <button

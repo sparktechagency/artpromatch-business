@@ -58,11 +58,7 @@ const CreateEventsPage = () => {
               placeholder="Event Name"
             />
           </Form.Item>
-          <Form.Item
-            name="type"
-            label={<p className=" text-md">Event Type</p>}
-            style={{}}
-          >
+          <Form.Item name="type" label={<p className=" text-md">Event Type</p>}>
             <Select placeholder="Select a Event Type">
               <Select.Option value="Event Type1">Event Type 2</Select.Option>
               <Select.Option value="Event Type1">Event Type 2</Select.Option>
@@ -71,7 +67,6 @@ const CreateEventsPage = () => {
           <Form.Item
             name="eventsSlots"
             label={<p className=" text-md">Events slots</p>}
-            style={{}}
           >
             <Select placeholder="Select">
               <Select.Option value="Events slots1">

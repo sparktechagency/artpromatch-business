@@ -1,15 +1,14 @@
-import DecisionMakerComp from '@/components/WithNavFooterComponents/DecisionMakerComp';
-import { getBookingsWithReviewThatHaveReviewForClientHomePage } from '@/services/Booking';
+import AllRequests from '@/components/WithNavFooterComponents/AllRequests';
+import { businessGetAllRequests } from '@/services/Request';
 
-const DashboardPage = async () => {
-  const { data: bookings } =
-    await getBookingsWithReviewThatHaveReviewForClientHomePage();
+const AllRequestsPage = async () => {
+  const { data: requests, meta } = await businessGetAllRequests();
 
   return (
     <div className="container mx-auto p-6">
-      <DecisionMakerComp bookings={bookings} />
+      <AllRequests requests={requests} meta={meta} />
     </div>
   );
 };
 
-export default DashboardPage;
+export default AllRequestsPage;

@@ -13,11 +13,13 @@ import {
   CheckCircleOutlined,
   ClockCircleOutlined,
   EnvironmentOutlined,
+  PhoneOutlined,
 } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { IMeta, IRequest } from '@/types';
 import { getCleanImageUrl } from '@/lib/getCleanImageUrl';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 
 interface AllRequestsProps {
   requests: IRequest[];
@@ -41,21 +43,28 @@ const AllRequests: React.FC<AllRequestsProps> = ({ requests, meta }) => {
 
   const columns: ColumnsType<IRequest> = [
     {
-      title: 'User Info',
-      dataIndex: 'fullName',
-      key: 'fullName',
+      title: 'Artist Info',
+      dataIndex: 'artistName',
+      key: 'artistName',
       render: (_, record) => (
         <div className="flex items-center gap-3">
-          <Avatar
-            src={getCleanImageUrl(record.image)}
-            icon={<UserOutlined />}
-            size="large"
-            className="border border-gray-200"
-          />
+          <Link href={`/artist/${record.artistId}`}>
+            <Avatar
+              src={getCleanImageUrl(record.image)}
+              icon={<UserOutlined />}
+              size="large"
+              className="border border-gray-200"
+            />
+          </Link>
           <div className="flex flex-col">
-            <span className="font-semibold text-gray-800">
-              {record.fullName}
-            </span>
+            <Link
+              href={`/message?receiverId=${record.artistAuthId}`}
+              className="hover:underline!"
+            >
+              <span className="font-semibold text-gray-800 hover:text-blue-500">
+                {record.artistName}
+              </span>
+            </Link>
             <span className="text-xs text-gray-500">{record.email}</span>
           </div>
         </div>
@@ -81,6 +90,17 @@ const AllRequests: React.FC<AllRequestsProps> = ({ requests, meta }) => {
           <span className="truncate max-w-[150px]" title={location}>
             {location}
           </span>
+        </div>
+      ),
+    },
+    {
+      title: 'Phone',
+      dataIndex: 'phone',
+      key: 'phone',
+      render: phone => (
+        <div className="flex items-center text-gray-600 gap-1">
+          <PhoneOutlined />
+          <span title={phone}>{phone}</span>
         </div>
       ),
     },

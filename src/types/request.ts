@@ -1,7 +1,9 @@
 export interface IRequest {
   _id: string;
 
-  fullName: string;
+  artistName: string;
+  artistId: string;
+  artistAuthId: string;
   email: string;
   phone: string;
   image: string;

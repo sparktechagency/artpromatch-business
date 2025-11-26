@@ -10,22 +10,30 @@ import {
   EnvironmentOutlined,
 } from '@ant-design/icons';
 import dayjs from 'dayjs';
-import { IRequest } from '@/types';
+import { IMeta, IRequest } from '@/types';
 import { getCleanImageUrl } from '@/lib/getCleanImageUrl';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
-// Props Interface
 interface AllRequestsProps {
   requests: IRequest[];
-  meta: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPage: number;
-  };
+  meta: IMeta;
 }
 
 const AllRequests: React.FC<AllRequestsProps> = ({ requests, meta }) => {
-  // Table & Column Configuration
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  // onPaginationChange
+  const onPaginationChange = (page: number, pageSize: number) => {
+    const currentParams = new URLSearchParams(searchParams.toString());
+
+    currentParams.set('page', page.toString());
+    currentParams.set('limit', pageSize.toString());
+
+    router.push(`${pathname}?${currentParams.toString()}`);
+  };
+
   const columns: ColumnsType<IRequest> = [
     {
       title: 'User Info',
@@ -113,29 +121,29 @@ const AllRequests: React.FC<AllRequestsProps> = ({ requests, meta }) => {
       sorter: (a, b) =>
         new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
     },
-    {
-      title: 'Action',
-      key: 'action',
-      render: (_, record) => (
-        <Space size="middle">
-          <Tooltip title="View Details">
-            <Button
-              type="primary"
-              shape="circle"
-              icon={<EyeOutlined />}
-              onClick={() => console.log('View', record._id)}
-              className="bg-blue-500 hover:bg-blue-600 border-none"
-            />
-          </Tooltip>
-        </Space>
-      ),
-    },
+    // {
+    //   title: 'Action',
+    //   key: 'action',
+    //   render: (_, record) => (
+    //     <Space size="middle">
+    //       <Tooltip title="View Details">
+    //         <Button
+    //           type="primary"
+    //           shape="circle"
+    //           icon={<EyeOutlined />}
+    //           onClick={() => console.log('View', record._id)}
+    //           className="bg-blue-500 hover:bg-blue-600 border-none"
+    //         />
+    //       </Tooltip>
+    //     </Space>
+    //   ),
+    // },
   ];
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        {/* header section */}
+        {/* Header Section */}
         <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-white">
           <div>
             <h2 className="text-2xl font-bold text-gray-800 m-0">
@@ -146,7 +154,7 @@ const AllRequests: React.FC<AllRequestsProps> = ({ requests, meta }) => {
             </p>
           </div>
           <div className="bg-blue-50 text-blue-600 px-4 py-2 rounded-lg font-semibold">
-            Total: {requests?.length || 0}
+            Total: {meta?.total || 0}
           </div>
         </div>
 
@@ -155,9 +163,16 @@ const AllRequests: React.FC<AllRequestsProps> = ({ requests, meta }) => {
           columns={columns}
           dataSource={requests}
           rowKey="_id"
-          pagination={false}
+          pagination={{
+            current: meta.page,
+            pageSize: meta.limit,
+            total: meta.total,
+            onChange: onPaginationChange,
+            showSizeChanger: true,
+            pageSizeOptions: ['10', '20', '50'],
+          }}
           className="ant-table-custom"
-          scroll={{ x: 800 }} // for mobile responsive
+          scroll={{ x: 800 }}
         />
       </div>
     </div>

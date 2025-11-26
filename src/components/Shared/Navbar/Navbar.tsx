@@ -105,8 +105,8 @@ const NavBar = () => {
     },
 
     {
-      name: 'Dashboard',
-      link: '/dashboard',
+      name: 'Requests',
+      link: '/requests',
       icon: '',
       isDropdown: false,
       dropdownItems: [],

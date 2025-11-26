@@ -31,20 +31,26 @@ export const businessRequestArtist = async (artistId: string): Promise<any> => {
 };
 
 // businessGetAllRequests
-export const businessGetAllRequests = async (): Promise<any> => {
+export const businessGetAllRequests = async (
+  page: string = '1',
+  limit: string = '20'
+): Promise<any> => {
   const accessToken = await getValidAccessTokenForServerActions();
 
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/requests`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API}/requests?page=${page}&limit=${limit}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
 
-      next: {
-        tags: ['REQUESTS'],
-      },
-    });
+        next: {
+          tags: ['REQUESTS'],
+        },
+      }
+    );
 
     const result = await res.json();
     return result;

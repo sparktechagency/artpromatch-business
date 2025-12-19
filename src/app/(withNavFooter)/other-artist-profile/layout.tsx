@@ -1,13 +1,13 @@
-import ProfileSidebar from '@/components/WithNavFooterComponents/OtherArtistProfile/ProfileSidebar';
-import TattoArtistProfile from '@/components/WithNavFooterComponents/OtherArtistProfile/TattoArtistProfile';
+// import ProfileSidebar from '@/components/WithNavFooterComponents/OtherArtistProfile/ProfileSidebar';
+// import TattoArtistProfile from '@/components/WithNavFooterComponents/OtherArtistProfile/TattoArtistProfile';
 
 const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="">
-      <TattoArtistProfile />
+      {/* <TattoArtistProfile /> */}
       <div className="container mx-auto  flex flex-col md:flex-row my-10">
         <div className="w-[20%] ">
-          <ProfileSidebar />
+          {/* <ProfileSidebar /> */}
         </div>
         <div className="w-[80%] px-5">
           <div>

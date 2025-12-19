@@ -54,9 +54,9 @@ const AboutBusiness: React.FC = () => {
   };
 
   return (
-    <div className="py-16 md:py-0 h-[100vh] w-full flex items-center justify-center">
+    <div className="py-16 md:py-0 h-screen w-full flex items-center justify-center">
       <div className="pt-32 pb-16">
-        <div className="md:w-[450px]">
+        <div className="md:w-112.5">
           <Form<BusinessFormValues>
             name="about-business"
             layout="vertical"

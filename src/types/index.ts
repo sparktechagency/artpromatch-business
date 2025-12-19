@@ -1,3 +1,4 @@
+export * from './auth';
 export * from './artist';
 export * from './booking';
 export * from './faq';

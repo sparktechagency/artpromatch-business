@@ -1,10 +1,10 @@
 import React from 'react';
-import AvailableFlash from './available-flash/page';
+// import AvailableFlash from './available-flash/page';
 
 const ProfilePage = () => {
   return (
     <div>
-      <AvailableFlash />
+      {/* <AvailableFlash /> */}
     </div>
   );
 };

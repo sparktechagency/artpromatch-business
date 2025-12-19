@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { Drawer, Upload } from 'antd';
 import Image from 'next/image';
-import { FaCamera, FaHamburger, FaUser } from 'react-icons/fa';
+import { FaCamera, FaHamburger } from 'react-icons/fa';
 import { toast } from 'sonner';
 import { useUser } from '@/context/UserContext';
 import { updateProfilePhoto } from '@/services/Auth';

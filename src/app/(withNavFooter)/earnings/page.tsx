@@ -24,7 +24,7 @@ const EarningsPage = () => {
         <div className="md:w-[40%] p-5 border rounded-lg ">
           <PieChartComponent />
         </div>
-        <div className="md:w-[60%] h-[460px] p-5  border rounded-lg ">
+        <div className="md:w-[60%] h-115 p-5  border rounded-lg ">
           <EarningChartComponent />
         </div>
       </div>

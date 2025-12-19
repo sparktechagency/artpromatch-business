@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { Drawer, Upload } from 'antd';
 import Image from 'next/image';
-import { FaCamera, FaHamburger, FaUser } from 'react-icons/fa';
+import { FaCamera, FaHamburger } from 'react-icons/fa';
 import { toast } from 'sonner';
 import { useUser } from '@/context/UserContext';
 import { updateProfilePhoto } from '@/services/Auth';
@@ -19,10 +19,10 @@ const UserDashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const menuItems = [
     { name: 'Update Profile', path: '/profile/update' },
     { name: 'Password Management', path: '/profile/change-password' },
-    { name: 'Preferences', path: '/profile/preferences' },
-    { name: 'Notifications', path: '/profile/notifications' },
-    { name: 'Payment History', path: '/profile/payment-history' },
-    { name: 'Privacy & Security', path: '/profile/privacy-security' },
+    // { name: 'Preferences', path: '/profile/preferences' },
+    // { name: 'Notifications', path: '/profile/notifications' },
+    // { name: 'Payment History', path: '/profile/payment-history' },
+    // { name: 'Privacy & Security', path: '/profile/privacy-security' },
     { name: 'Linked Accounts', path: '/profile/linked-accounts' },
   ];
 
@@ -155,11 +155,11 @@ const UserDashboardLayout = ({ children }: { children: React.ReactNode }) => {
             </div>
 
             {/* Profile Preview Button */}
-            <Link href="/me">
+            {/* <Link href="/me">
               <button className="flex items-center gap-2 px-10 py-2 rounded-xl border hover:border-primary hover:text-primary transition">
                 <FaUser /> Profile Preview
               </button>
-            </Link>
+            </Link> */}
           </div>
 
           {/* Children Content */}

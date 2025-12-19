@@ -52,11 +52,7 @@ const UserProfile = () => {
           layout="vertical"
           className="my-5"
         >
-          <Form.Item
-            name="name"
-            label={<p className=" text-md">Full Name</p>}
-            style={{}}
-          >
+          <Form.Item name="name" label={<p className=" text-md">Full Name</p>}>
             <Input
               required
               style={{ padding: '6px' }}
@@ -64,11 +60,7 @@ const UserProfile = () => {
               placeholder="Your Name"
             />
           </Form.Item>
-          <Form.Item
-            name="email"
-            label={<p className=" text-md">Email</p>}
-            style={{}}
-          >
+          <Form.Item name="email" label={<p className=" text-md">Email</p>}>
             <Input
               required
               style={{ padding: '6px' }}

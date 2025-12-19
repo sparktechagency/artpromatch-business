@@ -36,9 +36,11 @@ const HeroSection = () => {
         </Typography.Text>
         <div className="flex flex-col md:flex-row justify-center items-center md:gap-5 mb-20">
           <Link href="/sign-in">
-            <button className="bg-black text-white py-3 px-6 rounded-lg mt-5 flex  items-center gap-2">
-              Get Started
-              <MdKeyboardArrowRight />
+            <button>
+              <div className="bg-black py-3 px-6 rounded-lg mt-5 flex items-center gap-2 text-white">
+                Get Started
+                <MdKeyboardArrowRight />
+              </div>
             </button>
           </Link>
         </div>

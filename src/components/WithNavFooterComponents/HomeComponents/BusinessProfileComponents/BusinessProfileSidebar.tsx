@@ -224,11 +224,7 @@ const BusinessProfileSidebar = () => {
             onFinish={onFinish}
             layout="vertical"
           >
-            <Form.Item
-              name="email"
-              label={<p className=" text-md">Email</p>}
-              style={{}}
-            >
+            <Form.Item name="email" label={<p className=" text-md">Email</p>}>
               <Input
                 required
                 style={{ padding: '6px' }}
@@ -240,7 +236,6 @@ const BusinessProfileSidebar = () => {
             <Form.Item
               name="phone"
               label={<p className=" text-md">Phone Number</p>}
-              style={{}}
             >
               <Input
                 required

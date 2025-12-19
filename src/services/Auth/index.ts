@@ -3,7 +3,10 @@
 import { cookies } from 'next/headers';
 import { jwtDecode } from 'jwt-decode';
 import { FieldValues } from '@/types';
-import { getValidAccessTokenForServerActions } from '@/lib/getValidAccessToken';
+import {
+  getValidAccessTokenForServerActions,
+  getValidAccessTokenForServerHandlerGet,
+} from '@/lib/getValidAccessToken';
 
 // socialSignIn
 export const socialSignIn = async (payload: {
@@ -216,7 +219,10 @@ export const updateProfilePhoto = async (data: FormData): Promise<any> => {
 };
 
 // updateAuthData
-export const updateAuthData = async (fullName: string): Promise<any> => {
+export const updateAuthData = async (data: {
+  fullName: string;
+  stringLocation: string;
+}): Promise<any> => {
   const accessToken = await getValidAccessTokenForServerActions();
 
   try {
@@ -224,7 +230,7 @@ export const updateAuthData = async (fullName: string): Promise<any> => {
       `${process.env.NEXT_PUBLIC_BASE_API}/auth/update-auth-data`,
       {
         method: 'PATCH',
-        body: JSON.stringify({ fullName }),
+        body: JSON.stringify(data),
         headers: {
           Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
@@ -237,6 +243,28 @@ export const updateAuthData = async (fullName: string): Promise<any> => {
       (await cookies()).set('accessToken', result?.data?.accessToken);
     }
 
+    return result;
+  } catch (error: any) {
+    return Error(error);
+  }
+};
+
+// fetchProfileData
+export const fetchProfileData = async (): Promise<any> => {
+  const accessToken = await getValidAccessTokenForServerHandlerGet();
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API}/auth/profile`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    const result = await res.json();
     return result;
   } catch (error: any) {
     return Error(error);
@@ -468,6 +496,65 @@ export const getUserForConversation = async (searchTerm: string) => {
     );
 
     const result = await res.json();
+    return result;
+  } catch (error: any) {
+    return Error(error);
+  }
+};
+
+// deactivateAccount
+export const deactivateAccount = async (data: FieldValues) => {
+  const accessToken = await getValidAccessTokenForServerActions();
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API}/auth/deactive-account`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      }
+    );
+
+    const result = await res.json();
+
+    if (result?.success) {
+      (await cookies()).delete('accessToken');
+      (await cookies()).delete('refreshToken');
+    }
+
+    return result;
+  } catch (error: any) {
+    return Error(error);
+  }
+};
+
+// deleteAccount
+export const deleteAccount = async (data: FieldValues) => {
+  const accessToken = await getValidAccessTokenForServerActions();
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API}/auth/delete-account`,
+      {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      }
+    );
+
+    const result = await res.json();
+
+    if (result?.success) {
+      (await cookies()).delete('accessToken');
+      (await cookies()).delete('refreshToken');
+    }
+
     return result;
   } catch (error: any) {
     return Error(error);

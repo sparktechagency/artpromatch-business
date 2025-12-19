@@ -111,7 +111,7 @@ const SetSpecififcAvailiblity = () => {
         }}
         views={['month']}
         defaultView={view}
-        onView={newView => setView(newView)}
+        onView={(newView: string) => setView(newView)}
         eventPropGetter={() => ({
           style: {
             backgroundColor: '#e3fcef',

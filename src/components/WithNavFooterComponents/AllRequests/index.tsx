@@ -1,11 +1,6 @@
 'use client';
 
-import {
-  Table,
-  Tag,
-  Avatar,
-  // Space, Button, Tooltip
-} from 'antd';
+import { Table, Tag, Avatar, Button, Popconfirm } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import {
   UserOutlined,
@@ -14,12 +9,16 @@ import {
   ClockCircleOutlined,
   EnvironmentOutlined,
   PhoneOutlined,
+  DeleteOutlined,
 } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { IMeta, IRequest } from '@/types';
 import { getCleanImageUrl } from '@/lib/getCleanImageUrl';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { useState } from 'react';
+import { businessDeleteSpecificRequest } from '@/services/Request';
+import { toast } from 'sonner';
 
 interface AllRequestsProps {
   requests: IRequest[];
@@ -30,6 +29,25 @@ const AllRequests: React.FC<AllRequestsProps> = ({ requests, meta }) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const handleDeleteRequest = async (id: string) => {
+    setDeletingId(id);
+
+    try {
+      const result = await businessDeleteSpecificRequest(id);
+      if (result?.success) {
+        toast.success(result?.message || 'Request deleted successfully');
+        // router.refresh();
+      } else {
+        toast.error(result?.message || 'Failed to delete request');
+      }
+    } catch (error: any) {
+      toast.error(error?.message || 'Failed to delete request');
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   // onPaginationChange
   const onPaginationChange = (page: number, pageSize: number) => {
@@ -87,7 +105,7 @@ const AllRequests: React.FC<AllRequestsProps> = ({ requests, meta }) => {
       render: location => (
         <div className="flex items-center text-gray-600 gap-1">
           <EnvironmentOutlined />
-          <span className="truncate max-w-[150px]" title={location}>
+          <span className="truncate max-w-37.5" title={location}>
             {location}
           </span>
         </div>
@@ -145,6 +163,34 @@ const AllRequests: React.FC<AllRequestsProps> = ({ requests, meta }) => {
       ),
       sorter: (a, b) =>
         new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (_, record) => {
+        if (record.status !== 'pending') return null;
+
+        return (
+          <Popconfirm
+            title="Delete this request?"
+            description="This action cannot be undone."
+            okText="Delete"
+            okButtonProps={{ danger: true }}
+            cancelText="Cancel"
+            onConfirm={() => handleDeleteRequest(record._id)}
+          >
+            <Button
+              danger
+              type="primary"
+              icon={<DeleteOutlined />}
+              loading={deletingId === record._id}
+              disabled={deletingId !== null && deletingId !== record._id}
+            >
+              Delete
+            </Button>
+          </Popconfirm>
+        );
+      },
     },
     // {
     //   title: 'Action',

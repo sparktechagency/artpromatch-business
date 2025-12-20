@@ -1,6 +1,9 @@
 'use server';
 
-import { getValidAccessTokenForServerActions } from '@/lib/getValidAccessToken';
+import {
+  getValidAccessTokenForServerActions,
+  getValidAccessTokenForServerHandlerGet,
+} from '@/lib/getValidAccessToken';
 // import { FieldValues } from '@/types';
 import { revalidateTag } from 'next/cache';
 
@@ -35,7 +38,7 @@ export const businessGetAllRequests = async (
   page: string = '1',
   limit: string = '20'
 ): Promise<any> => {
-  const accessToken = await getValidAccessTokenForServerActions();
+  const accessToken = await getValidAccessTokenForServerHandlerGet();
 
   try {
     const res = await fetch(
@@ -51,6 +54,32 @@ export const businessGetAllRequests = async (
         },
       }
     );
+
+    const result = await res.json();
+    return result;
+  } catch (error: any) {
+    return Error(error);
+  }
+};
+
+// businessDeleteSpecificRequest
+export const businessDeleteSpecificRequest = async (
+  id: string
+): Promise<any> => {
+  const accessToken = await getValidAccessTokenForServerActions();
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API}/requests/delete/${id}`,
+      {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    revalidateTag('REQUESTS');
 
     const result = await res.json();
     return result;

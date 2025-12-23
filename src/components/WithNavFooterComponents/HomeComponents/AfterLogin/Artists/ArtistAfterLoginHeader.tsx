@@ -68,7 +68,7 @@ const ArtistAfterLoginHeader = () => {
         </div>
 
         {/* Search field */}
-        <div className="mt-2 md:mt-5 md:w-[650px] border rounded-lg p-2 flex justify-between items-center gap-2">
+        <div className="mt-2 md:mt-5 md:w-162.5 border rounded-lg p-2 flex justify-between items-center gap-2">
           <input
             type="text"
             value={searchTerm}

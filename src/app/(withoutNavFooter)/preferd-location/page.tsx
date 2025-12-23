@@ -102,14 +102,14 @@ const PreferedLocation = () => {
   };
 
   return (
-    <div className="py-16 md:py-0 h-[100vh] w-full flex items-center justify-center">
+    <div className="py-16 md:py-0 h-screen w-full flex items-center justify-center">
       <div className="pt-32 pb-16">
         <div className="w-full">
           <Form
             form={form}
             name="select-user-type"
             layout="vertical"
-            className="w-full md:w-[600px] bg-white px-2 rounded-2xl"
+            className="w-full md:w-150 bg-white px-2 rounded-2xl"
           >
             <div className="mb-4 flex flex-col justify-center items-center text-center">
               <Image src={AllImages.logo} width={50} height={50} alt="logo" />

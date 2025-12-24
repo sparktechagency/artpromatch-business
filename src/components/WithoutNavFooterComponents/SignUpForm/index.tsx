@@ -176,7 +176,7 @@ const SignUpForm = () => {
             style={{ maxWidth: 550 }}
             onFinish={handleSignUpUser}
             layout="vertical"
-            className="w-full md:w-[600px] bg-white px-2 rounded-2xl"
+            className="w-full md:w-150 bg-white px-2 rounded-2xl"
           >
             <div className="mb-4 flex flex-col justify-center items-center text-center">
               <Image src={AllImages.logo} width={50} height={50} alt="logo" />

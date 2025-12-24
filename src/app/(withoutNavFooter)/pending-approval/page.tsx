@@ -46,7 +46,7 @@ const PendingApprovalPage = () => {
           <Image src={AllImages.logo} width={60} height={60} alt="logo" />
           <Typography.Title
             level={3}
-            className="!mt-4 !mb-2 text-primary font-bold"
+            className="mt-4! mb-2! text-primary font-bold"
           >
             Profile Under Review
           </Typography.Title>

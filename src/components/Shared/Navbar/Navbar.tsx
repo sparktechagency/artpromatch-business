@@ -182,7 +182,7 @@ const NavBar = () => {
             </div>
           </Link>
 
-          <div className="hidden lg:flex flex-grow justify-center space-x-6">
+          <div className="hidden lg:flex grow justify-center space-x-6">
             {(user ? afterLoginLabels : beforeLoginLabels).map((item, index) =>
               item?.isDropdown ? (
                 <Dropdown

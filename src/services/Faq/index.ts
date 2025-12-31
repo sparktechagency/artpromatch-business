@@ -22,8 +22,6 @@ export const getAllFaqs = async (): Promise<any> => {
 
 // createFaqByUser
 export const createFaqByUser = async (data: FieldValues): Promise<any> => {
-  console.log({ data });
-
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_API}/faq/create/by-user`,

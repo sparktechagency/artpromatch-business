@@ -11,7 +11,7 @@ const BeforeLogin = ({ bookings = [] }: { bookings: IBooking[] }) => {
       <HeroSection />
       <WhyUs />
       <HowItsWorks />
-      <Testimonials bookings={bookings} />
+      {bookings.length > 0 && <Testimonials bookings={bookings} />}
       <SteadyHands />
     </div>
   );

@@ -11,7 +11,7 @@ const DiscoverPage = async ({
   const query = await searchParams;
 
   const {
-    data: artists,
+    data,
     meta,
     // success,
     // message,
@@ -28,7 +28,7 @@ const DiscoverPage = async ({
   return (
     <div>
       <ArtistAfterLoginHeader />
-      <Artists artists={artists} />
+      <Artists data={data} />
       <Pagination meta={meta} />
     </div>
   );

@@ -8,7 +8,7 @@ import { FaStar } from 'react-icons/fa6';
 import { SiGoogletasks } from 'react-icons/si';
 import Mapview from './MapView';
 import ServiceDetailsModal from './ServiceDetailsModal';
-import { ExpertiseType, IArtist } from '@/types';
+import { IArtist } from '@/types';
 import { getCleanImageUrl } from '@/lib/getCleanImageUrl';
 import { useUser } from '@/context/UserContext';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -19,30 +19,39 @@ import { toast } from 'sonner';
 type ViewMode = 'list' | 'map';
 const ALL = 'All';
 
-const Artists = ({ artists = [] }: { artists: IArtist[] }) => {
+const Artists = ({
+  data,
+}: {
+  data: { artists: IArtist[]; availableExpertise: string[] };
+}) => {
   const { user } = useUser();
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  const artists = data?.artists ?? [];
+  const availableExpertise = data?.availableExpertise
+    ? [ALL, ...data?.availableExpertise]
+    : [];
+
   /* ---------------- filters ---------------- */
-  const { artistTypes, tattooCategories } = useMemo(() => {
+  const { artistTypes } = useMemo(() => {
     const types = Array.from(
       new Set(
         artists.map(a => a?.type).filter(v => Boolean(v && String(v).trim()))
       )
     );
 
-    const categories = Array.from(
-      new Set(
-        artists
-          .flatMap(a => a?.expertise || [])
-          .filter(v => Boolean(v && String(v).trim()))
-      )
-    );
+    // const categories = Array.from(
+    //   new Set(
+    //     artists
+    //       .flatMap(a => a?.expertise || [])
+    //       .filter(v => Boolean(v && String(v).trim()))
+    //   )
+    // );
 
     return {
       artistTypes: [ALL, ...types],
-      tattooCategories: [ALL, ...categories],
+      // tattooCategories: [ALL, ...categories],
     };
   }, [artists]);
 
@@ -102,7 +111,15 @@ const Artists = ({ artists = [] }: { artists: IArtist[] }) => {
       params.set(key, values.join(','));
     }
 
-    router.push(`?${params.toString()}`, { scroll: false });
+    const next = `?${params.toString()}`;
+    const current = `?${searchParams.toString()}`;
+
+    if (next === current) return;
+
+    // ✅ defer navigation out of render phase
+    queueMicrotask(() => {
+      router.push(next, { scroll: false });
+    });
   };
 
   // handleRequestArtist
@@ -135,7 +152,7 @@ const Artists = ({ artists = [] }: { artists: IArtist[] }) => {
           />
 
           <div className="flex flex-wrap gap-2">
-            {tattooCategories.map(cat => (
+            {availableExpertise?.map(cat => (
               <div
                 key={cat}
                 onClick={() => {
@@ -180,7 +197,7 @@ const Artists = ({ artists = [] }: { artists: IArtist[] }) => {
               <button
                 key={v}
                 onClick={() => setView(v)}
-                className={`px-5 py-2 rounded-lg text-sm transition ${
+                className={`px-5 py-2 rounded-lg text-sm transition cursor-pointer ${
                   view === v ? 'bg-white shadow text-primary' : 'text-slate-500'
                 }`}
               >

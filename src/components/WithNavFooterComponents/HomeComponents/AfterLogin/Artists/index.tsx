@@ -2,20 +2,21 @@
 
 import { Modal, Select } from 'antd';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { FaStar } from 'react-icons/fa6';
-import Link from 'next/link';
+import { SiGoogletasks } from 'react-icons/si';
 import Mapview from './MapView';
 import ServiceDetailsModal from './ServiceDetailsModal';
 import { ExpertiseType, IArtist } from '@/types';
 import { getCleanImageUrl } from '@/lib/getCleanImageUrl';
 import { useUser } from '@/context/UserContext';
-import { SiGoogletasks } from 'react-icons/si';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { formatCount } from '@/lib/formatCount';
+import { businessRequestArtist } from '@/services/Request';
+import { toast } from 'sonner';
 
 type ViewMode = 'list' | 'map';
-
 const ALL = 'All';
 
 const Artists = ({ artists = [] }: { artists: IArtist[] }) => {
@@ -23,243 +24,294 @@ const Artists = ({ artists = [] }: { artists: IArtist[] }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Derive filters safely
+  /* ---------------- filters ---------------- */
   const { artistTypes, tattooCategories } = useMemo(() => {
     const types = Array.from(
       new Set(
-        artists
-          .map(artist => artist?.type)
-          .filter(v => Boolean(v && String(v).trim()))
+        artists.map(a => a?.type).filter(v => Boolean(v && String(v).trim()))
       )
     );
+
     const categories = Array.from(
       new Set(
         artists
-          .flatMap(artist => artist?.expertise || [])
+          .flatMap(a => a?.expertise || [])
           .filter(v => Boolean(v && String(v).trim()))
       )
     );
+
     return {
       artistTypes: [ALL, ...types],
       tattooCategories: [ALL, ...categories],
     };
   }, [artists]);
 
-  // UI state
+  // UI state (match Services UI behavior)
   const [artistType, setArtistType] = useState<string>(artistTypes[0] ?? ALL);
-  const [tattooCategory, setTattooCategory] = useState<string>(
-    tattooCategories[0] ?? ALL
-  );
+  const [tattooCategoriesSelected, setTattooCategoriesSelected] = useState<
+    string[]
+  >([]);
+
+  const [view, setView] = useState<ViewMode>('list');
+  const [selectedArtist, setSelectedArtist] = useState<IArtist | null>(null);
   const [isShowServiceModalOpen, setIsShowServiceModalOpen] =
     useState<boolean>(false);
-  const [selectedArtist, setSelectedArtist] = useState<IArtist | null>(null);
-  const [view, setView] = useState<ViewMode>('list');
 
-  // ✅ Sync filters from URL on reload or URL change
+  // Sync filters from URL on first load
   useEffect(() => {
-    const urlArtistType = searchParams.get('artistType') || ALL;
-    const urlTattooCategory = searchParams.get('tattooCategory') || ALL;
+    setArtistType(searchParams.get('artistType') || ALL);
 
-    setArtistType(urlArtistType);
-    setTattooCategory(urlTattooCategory);
-  }, [searchParams]);
+    const categoryParam = searchParams.get('tattooCategory');
+    if (categoryParam) {
+      setTattooCategoriesSelected(categoryParam.split(','));
+    } else {
+      setTattooCategoriesSelected([]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Apply both filters consistently
   const filteredArtists = useMemo(() => {
     return artists.filter(artist => {
       const byType = artistType === ALL ? true : artist?.type === artistType;
+
       const byCategory =
-        tattooCategory === ALL
+        tattooCategoriesSelected.length === 0
           ? true
-          : (artist?.expertise || []).includes(tattooCategory as ExpertiseType);
+          : (artist?.expertise || []).some(exp =>
+              tattooCategoriesSelected.includes(exp)
+            );
+
       return byType && byCategory;
     });
-  }, [artists, artistType, tattooCategory]);
+  }, [artists, artistType, tattooCategoriesSelected]);
 
   const openModal = (id: string) => {
-    const artist = artists?.find(artist => artist._id === id) || null;
+    const artist = artists.find(a => a._id === id) || null;
     setSelectedArtist(artist);
     setIsShowServiceModalOpen(true);
   };
 
-  // helper function
-  const updateQuery = (key: string, value: string) => {
+  // helper function (same as Services: supports multi values)
+  const updateQuery = (key: string, values: string[]) => {
     const params = new URLSearchParams(searchParams.toString());
-    if (value === ALL) {
+
+    if (values.length === 0) {
       params.delete(key);
     } else {
-      params.set(key, value);
+      params.set(key, values.join(','));
     }
-    const newUrl = `?${params.toString()}`;
-    router.push(newUrl, { scroll: false });
+
+    router.push(`?${params.toString()}`, { scroll: false });
   };
 
+  // handleRequestArtist
+  const handleRequestArtist = async () => {
+    if (!selectedArtist) return;
+
+    const res = await businessRequestArtist(selectedArtist?._id);
+
+    if (res?.success) {
+      toast.success(res?.message);
+    } else {
+      toast.error(res?.message || 'Failed to request artist!');
+    }
+  };
+
+  /* ---------------- UI ---------------- */
   return (
-    <div className="container mx-auto md:my-8">
-      <div className="flex justify-between items-center">
-        <Select
-          value={artistType}
-          style={{ width: 180 }}
-          // onChange={(v: string) => setArtistType(v)}
-          onChange={(v: string) => {
-            setArtistType(v);
-            updateQuery('artistType', v);
-          }}
-          options={artistTypes.map(t => ({ label: t, value: t }))}
-        />
-
-        <div>
-          {tattooCategories.map(category => (
-            <button
-              key={category}
-              type="button"
-              // onClick={() => setTattooCategory(category)}
-              onClick={() => {
-                setTattooCategory(category);
-                updateQuery('tattooCategory', category);
-              }}
-              className={`py-2 px-4 rounded-3xl border cursor-pointer ${
-                tattooCategory === category
-                  ? 'bg-slate-100 text-primary border-primary'
-                  : 'hover:bg-slate-50 hover:text-primary border-transparent'
-              }`}
-            >
-              {category}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="my-8 flex justify-between items-center">
-        <p>
-          {filteredArtists.length} {tattooCategory}
-        </p>
-        <div className="flex gap-2">
-          <div
-            onClick={() => setView('list')}
-            className={`py-2 px-6 rounded-2xl cursor-pointer ${
-              view === 'list'
-                ? 'bg-primary text-white'
-                : 'border border-primary text-primary'
-            }`}
-          >
-            List View
-          </div>
-          <div
-            onClick={() => setView('map')}
-            className={`py-2 px-6 rounded-2xl cursor-pointer ${
-              view === 'map'
-                ? 'bg-primary text-white'
-                : 'border border-primary text-primary'
-            }`}
-          >
-            Map View
-          </div>
-        </div>
-      </div>
-
-      {view === 'list' ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-          {filteredArtists.map(artist => (
-            <div
-              key={artist?._id}
-              className="border rounded-xl border-gray-300/50 p-2"
-            >
-              <Image
-                onClick={() => openModal(artist._id)}
-                src={getCleanImageUrl(artist?.auth?.image)}
-                alt={artist?.auth?.fullName}
-                height={300}
-                width={500}
-                className="cursor-pointer w-full h-60 object-cover rounded-lg"
-              />
-
-              <div className="flex items-center gap-2">
-                <Link href={`/artist/${artist?._id}`}>
-                  <Image
-                    src={getCleanImageUrl(artist?.auth?.image)}
-                    alt={artist?.auth?.fullName}
-                    height={50}
-                    width={50}
-                    className="rounded-full h-12 w-12"
-                  />
-                </Link>
-
-                <div className="py-5">
-                  <h1 className="text-xl font-semibold">
-                    {artist?.auth?.fullName}{' '}
-                    {user?.id === artist?.auth?._id && '(me)'}
-                  </h1>
-                  <div className="text-secondary whitespace-nowrap">
-                    {((artist?.distance ?? 0) / 1000).toFixed(2)} km
-                  </div>
-                </div>
-              </div>
-              <div className="text-xs text-neutral-500">
-                {artist?.stringLocation}
-              </div>
-
-              <div className="flex justify-between items-center gap-2 my-5">
-                {artist?.expertise
-                  ?.slice(0, 2)
-                  ?.map((exp: string, index: number) => (
-                    <div
-                      key={index}
-                      className="bg-neutral-200 px-3 py-2 rounded-3xl font-medium text-sm truncate"
-                    >
-                      {exp}
-                    </div>
-                  ))}
-
-                <div className="text-secondary">
-                  +{artist?.expertise?.length - 2}
-                </div>
-              </div>
-
-              <div className="flex justify-between items-center">
-                <div className="flex items-center gap-1">
-                  <SiGoogletasks />
-                  <span>{formatCount(artist?.totalCompletedService)} Done</span>
-                </div>
-
-                {artist?.avgRating > 0 && (
-                  <div className="flex gap-1 text-amber-600">
-                    <FaStar />
-                    {artist?.avgRating.toFixed(1)} ({artist?.totalReviewCount})
-                  </div>
-                )}
-
-                <div className="text-primary font-bold">
-                  {/* <FaDollarSign /> */}${artist?.hourlyRate ?? 0}/hr
-                  {/* <IoIosArrowForward /> */}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <Mapview artists={filteredArtists} />
-      )}
-
-      <Modal
-        open={isShowServiceModalOpen}
-        footer={null}
-        onCancel={() => {
-          setIsShowServiceModalOpen(false);
-        }}
-        centered
-        width={800}
-      >
-        {selectedArtist && (
-          <ServiceDetailsModal
-            selectedArtist={selectedArtist}
-            artists={artists}
-            // onClose={() => {
-            // setIsModalOpen(false);
-            // }}
+    <div className="bg-slate-50 py-10">
+      <div className="container mx-auto px-4">
+        {/* Filters */}
+        <div className="bg-white rounded-xl p-4 shadow-sm border flex flex-col md:flex-row gap-4 justify-between items-center">
+          <Select
+            value={artistType}
+            style={{ width: 180 }}
+            onChange={(v: string) => {
+              setArtistType(v);
+              updateQuery('artistType', [v]);
+            }}
+            options={artistTypes.map(t => ({ label: t, value: t }))}
           />
+
+          <div className="flex flex-wrap gap-2">
+            {tattooCategories.map(cat => (
+              <div
+                key={cat}
+                onClick={() => {
+                  if (cat === ALL) {
+                    setTattooCategoriesSelected([]);
+                    updateQuery('tattooCategory', []);
+                    return;
+                  }
+
+                  setTattooCategoriesSelected(prev => {
+                    const updated = prev.includes(cat)
+                      ? prev.filter(c => c !== cat)
+                      : [...prev, cat];
+
+                    updateQuery('tattooCategory', updated);
+                    return updated;
+                  });
+                }}
+                className={`px-4 py-2 rounded-full text-sm transition cursor-pointer ${
+                  tattooCategoriesSelected.includes(cat)
+                    ? 'bg-primary text-white shadow'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                }`}
+              >
+                {cat}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* View toggle (button text unchanged) */}
+        <div className="flex justify-between items-center my-8">
+          <p className="text-sm text-slate-600">
+            {tattooCategoriesSelected.length > 0
+              ? tattooCategoriesSelected.join(', ')
+              : 'All'}{' '}
+            ({filteredArtists.length})
+          </p>
+
+          <div className="flex bg-slate-100 p-1 rounded-xl">
+            {(['list', 'map'] as ViewMode[]).map(v => (
+              <button
+                key={v}
+                onClick={() => setView(v)}
+                className={`px-5 py-2 rounded-lg text-sm transition ${
+                  view === v ? 'bg-white shadow text-primary' : 'text-slate-500'
+                }`}
+              >
+                {v === 'list' ? 'List View' : 'Map View'}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Content */}
+        {view === 'list' ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {filteredArtists.map(artist => {
+              const km = `${((artist?.distance ?? 0) / 1000).toFixed(2)} km`;
+              const rating =
+                artist?.avgRating && artist.avgRating > 0
+                  ? artist.avgRating.toFixed(1)
+                  : null;
+
+              return (
+                <div
+                  key={artist._id}
+                  className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition border overflow-hidden flex flex-col"
+                >
+                  <div
+                    onClick={() => openModal(artist._id)}
+                    className="w-full h-56 bg-slate-100 flex items-center justify-center cursor-pointer"
+                  >
+                    <Image
+                      src={getCleanImageUrl(artist?.auth?.image)}
+                      alt={artist?.auth?.fullName || 'artist'}
+                      width={1000}
+                      height={1000}
+                      quality={90}
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+
+                  <div className="p-4 flex flex-col h-full">
+                    <h3 className="text-lg font-semibold">
+                      {artist?.auth?.fullName}{' '}
+                      {user?.id === artist?.auth?._id ? '(me)' : ''}
+                    </h3>
+
+                    <Link
+                      href={`/artist/${artist?._id}`}
+                      className="flex items-center gap-2 mt-2"
+                    >
+                      <Image
+                        src={getCleanImageUrl(artist?.auth?.image)}
+                        alt={artist?.auth?.fullName || 'artist'}
+                        width={40}
+                        height={40}
+                        className="rounded-full h-10 w-10 object-cover"
+                      />
+                      <span className="text-sm font-medium text-primary">
+                        {artist?.type || ''}
+                      </span>
+                    </Link>
+
+                    {artist?.stringLocation && (
+                      <div className="mt-2 text-xs text-neutral-500">
+                        {artist.stringLocation}
+                      </div>
+                    )}
+
+                    <div className="flex justify-between items-center mt-4 text-sm text-slate-600">
+                      <span>{km}</span>
+
+                      {rating && (
+                        <span className="flex items-center gap-1 text-amber-600">
+                          <FaStar className="text-xs" />
+                          {rating} ({artist?.totalReviewCount ?? 0})
+                        </span>
+                      )}
+
+                      <span className="font-semibold text-primary">
+                        ${artist?.hourlyRate ?? 0}/hr
+                      </span>
+                    </div>
+
+                    {artist?.expertise?.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mt-4">
+                        {artist.expertise.map((exp, i) => (
+                          <span
+                            key={`${exp}-${i}`}
+                            className="px-3 py-1 text-xs rounded-full bg-primary/10 text-primary"
+                          >
+                            {exp}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
+                    <div onClick={handleRequestArtist} className="mt-auto">
+                      <div className="mt-5 py-2 rounded-xl bg-primary text-white text-center font-semibold hover:bg-primary/90 transition cursor-pointer">
+                        Request to Join
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-1 text-xs text-slate-500 mt-4">
+                      <SiGoogletasks />
+                      {formatCount(artist?.totalCompletedService)} Done
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <Mapview artists={filteredArtists} />
         )}
-      </Modal>
+
+        {/* Modals */}
+        <Modal
+          open={isShowServiceModalOpen}
+          footer={null}
+          onCancel={() => setIsShowServiceModalOpen(false)}
+          centered
+          width={800}
+          destroyOnHidden
+        >
+          {selectedArtist && (
+            <ServiceDetailsModal
+              selectedArtist={selectedArtist}
+              artists={artists}
+              handleRequestArtist={handleRequestArtist}
+            />
+          )}
+        </Modal>
+      </div>
     </div>
   );
 };

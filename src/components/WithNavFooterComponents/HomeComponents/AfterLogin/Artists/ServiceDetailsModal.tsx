@@ -1,22 +1,20 @@
 import Image from 'next/image';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa6';
-import { useEffect, useState } from 'react';
+import { MouseEventHandler, useEffect, useState } from 'react';
 import { AiOutlineMessage } from 'react-icons/ai';
-import { CiHeart } from 'react-icons/ci';
 import Link from 'next/link';
 import { IArtist } from '@/types';
 import { getCleanImageUrl } from '@/lib/getCleanImageUrl';
-import { businessRequestArtist } from '@/services/Request';
-import { toast } from 'sonner';
 
 interface ServiceDetailsModalProps {
   artists: IArtist[];
   selectedArtist: IArtist;
+  handleRequestArtist: MouseEventHandler<HTMLDivElement>;
 }
 
 const ServiceDetailsModal = ({
   selectedArtist,
   artists,
+  handleRequestArtist,
 }: ServiceDetailsModalProps) => {
   const [currentArtist, setCurrentArtist] = useState(
     selectedArtist || artists[0]
@@ -25,19 +23,6 @@ const ServiceDetailsModal = ({
   useEffect(() => {
     setCurrentArtist(selectedArtist || artists[0]);
   }, [selectedArtist, artists]);
-
-  // handleRequestArtist
-  const handleRequestArtist = async () => {
-    if (!selectedArtist) return;
-
-    const res = await businessRequestArtist(selectedArtist?._id);
-
-    if (res?.success) {
-      toast.success(res?.message);
-    } else {
-      toast.error(res?.message || 'Failed to request artist!');
-    }
-  };
 
   return (
     <div className="relative p-4">

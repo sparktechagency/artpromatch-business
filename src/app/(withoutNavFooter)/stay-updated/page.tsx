@@ -383,8 +383,8 @@ const StayUpdated = () => {
   };
 
   return (
-    <div className="py-10 md:py-0 h-screen w-full flex items-center justify-center">
-      <div className="p-8 w-full md:w-175">
+    <div className="py-10 md:py-0 h-[100vh] w-full flex items-center justify-center">
+      <div className="p-8 w-full md:w-[700px]">
         <div className="mb-6 flex flex-col justify-center items-center text-center">
           <Image src={AllImages.logo} width={60} height={60} alt="logo" />
           <h2 className="text-center text-2xl font-bold mt-6 mb-2 text-primary">
@@ -508,7 +508,7 @@ const StayUpdated = () => {
               <button
                 disabled={isLoading}
                 type="submit"
-                className="w-full bg-primary text-lg font-medium text-white text-center p-2 rounded-xl mt-6 transition hover:bg-primary/90"
+                className="w-full bg-primary text-lg font-medium text-white text-center p-2 rounded-xl mt-6 transition hover:bg-primary/90 cursor-pointer"
               >
                 {isLoading ? 'Creating...' : 'Create Profile'}
               </button>
@@ -578,7 +578,7 @@ const StayUpdated = () => {
               <button
                 disabled={isLoading}
                 type="submit"
-                className="w-full bg-primary text-lg font-medium text-center p-2 rounded-xl mt-6 transition hover:bg-primary/90"
+                className="w-full bg-primary text-lg font-medium text-center p-2 rounded-xl mt-6 transition hover:bg-primary/90 cursor-pointer"
               >
                 <div className="text-white">
                   {isLoading ? 'Creating...' : 'Create Profile'}

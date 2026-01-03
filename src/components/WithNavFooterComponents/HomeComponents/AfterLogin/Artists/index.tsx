@@ -118,7 +118,7 @@ const Artists = ({ artists = [] }: { artists: IArtist[] }) => {
                 setTattooCategory(category);
                 updateQuery('tattooCategory', category);
               }}
-              className={`py-2 px-4 rounded-3xl border ${
+              className={`py-2 px-4 rounded-3xl border cursor-pointer ${
                 tattooCategory === category
                   ? 'bg-slate-100 text-primary border-primary'
                   : 'hover:bg-slate-50 hover:text-primary border-transparent'
@@ -137,7 +137,7 @@ const Artists = ({ artists = [] }: { artists: IArtist[] }) => {
         <div className="flex gap-2">
           <div
             onClick={() => setView('list')}
-            className={`py-2 px-6 rounded-2xl ${
+            className={`py-2 px-6 rounded-2xl cursor-pointer ${
               view === 'list'
                 ? 'bg-primary text-white'
                 : 'border border-primary text-primary'
@@ -147,7 +147,7 @@ const Artists = ({ artists = [] }: { artists: IArtist[] }) => {
           </div>
           <div
             onClick={() => setView('map')}
-            className={`py-2 px-6 rounded-2xl ${
+            className={`py-2 px-6 rounded-2xl cursor-pointer ${
               view === 'map'
                 ? 'bg-primary text-white'
                 : 'border border-primary text-primary'

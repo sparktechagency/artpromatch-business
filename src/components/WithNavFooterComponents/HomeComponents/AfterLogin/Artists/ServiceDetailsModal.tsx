@@ -43,9 +43,7 @@ const ServiceDetailsModal = ({
     <div className="relative p-4">
       <div className="flex justify-between items-center pb-3 border-b">
         <div className="flex items-center gap-3">
-          <Link
-            href={`/artist/${selectedArtist?._id}`}
-          >
+          <Link href={`/artist/${selectedArtist?._id}`}>
             <Image
               src={getCleanImageUrl(selectedArtist?.auth?.image)}
               alt="Profile"
@@ -72,7 +70,7 @@ const ServiceDetailsModal = ({
           </Link>
           <div
             onClick={handleRequestArtist}
-            className="px-3 py-1 bg-primary text-white rounded-lg"
+            className="px-3 py-1 bg-primary text-white rounded-lg cursor-pointer"
           >
             Request to Join
           </div>

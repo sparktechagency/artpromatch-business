@@ -81,7 +81,7 @@ const ArtistAfterLoginHeader = () => {
           {searchTerm && (
             <button
               onClick={handleReset}
-              className="h-7 w-7 rounded-full flex justify-center items-center hover:bg-gray-200"
+              className="h-7 w-7 rounded-full flex justify-center items-center hover:bg-gray-200 cursor-pointer"
             >
               <RxCross2 className="text-gray-500" />
             </button>
@@ -89,7 +89,7 @@ const ArtistAfterLoginHeader = () => {
 
           <button
             onClick={handleSearch}
-            className="bg-primary h-8 w-8 rounded-xl flex justify-center items-center"
+            className="bg-primary h-8 w-8 rounded-xl flex justify-center items-center cursor-pointer"
           >
             <CiSearch className="text-white h-5 w-5 font-bold" />
           </button>

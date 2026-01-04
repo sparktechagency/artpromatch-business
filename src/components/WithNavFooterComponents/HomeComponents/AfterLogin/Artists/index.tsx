@@ -206,6 +206,15 @@ const Artists = ({
                   key={artist._id}
                   className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition border overflow-hidden flex flex-col"
                 >
+                  {/* <Image
+                    onClick={() => openModal(artist._id)}
+                    src={getCleanImageUrl(artist?.auth?.image)}
+                    alt={artist?.auth?.fullName}
+                    height={300}
+                    width={500}
+                    className="cursor-pointer w-full h-60 object-cover rounded-lg"
+                  /> */}
+
                   <div
                     onClick={() => openModal(artist._id)}
                     className="w-full h-56 bg-slate-100 flex items-center justify-center cursor-pointer"

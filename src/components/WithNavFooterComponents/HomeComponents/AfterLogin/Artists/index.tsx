@@ -33,30 +33,8 @@ const Artists = ({
     ? [ALL, ...data?.availableExpertise]
     : [];
 
-  /* ---------------- filters ---------------- */
-  const { artistTypes } = useMemo(() => {
-    const types = Array.from(
-      new Set(
-        artists.map(a => a?.type).filter(v => Boolean(v && String(v).trim()))
-      )
-    );
-
-    // const categories = Array.from(
-    //   new Set(
-    //     artists
-    //       .flatMap(a => a?.expertise || [])
-    //       .filter(v => Boolean(v && String(v).trim()))
-    //   )
-    // );
-
-    return {
-      artistTypes: [ALL, ...types],
-      // tattooCategories: [ALL, ...categories],
-    };
-  }, [artists]);
-
   // UI state (match Services UI behavior)
-  const [artistType, setArtistType] = useState<string>(artistTypes[0] ?? ALL);
+  const [artistType, setArtistType] = useState<string>(ALL);
   const [tattooCategoriesSelected, setTattooCategoriesSelected] = useState<
     string[]
   >([]);
@@ -143,12 +121,18 @@ const Artists = ({
         <div className="bg-white rounded-xl p-4 shadow-sm border flex flex-col md:flex-row gap-4 justify-between items-center">
           <Select
             value={artistType}
-            style={{ width: 180 }}
+            style={{ minWidth: 120 }}
+            popupMatchSelectWidth={false}
+            listHeight={200}
             onChange={(v: string) => {
               setArtistType(v);
               updateQuery('artistType', [v]);
             }}
-            options={artistTypes.map(t => ({ label: t, value: t }))}
+            options={['All', 'Tattoo Artist', 'Piercer', 'Both']?.map(t => ({
+              label: t,
+              value: t,
+            }))}
+            className="w-fit"
           />
 
           <div className="flex flex-wrap gap-2">

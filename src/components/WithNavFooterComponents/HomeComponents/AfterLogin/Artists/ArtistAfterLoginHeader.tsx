@@ -5,13 +5,13 @@ import { Typography } from 'antd';
 import Image from 'next/image';
 import { IoLocationOutline } from 'react-icons/io5';
 import { CiSearch } from 'react-icons/ci';
-// import { IArtist } from '@/types';
 import { useUser } from '@/context/UserContext';
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { RxCross2 } from 'react-icons/rx';
+import Link from 'next/link';
+import { FiEdit2 } from 'react-icons/fi';
 
-// const ArtistAfterLoginHeader = ({ artists = [] }: { artists: IArtist[] }) => {
 const ArtistAfterLoginHeader = () => {
   const router = useRouter();
   const pathname = usePathname();
@@ -25,10 +25,6 @@ const ArtistAfterLoginHeader = () => {
     const term = searchParams.get('searchTerm') || '';
     setSearchTerm(term);
   }, [searchParams]);
-
-  // const loggedinUser = artists?.find(
-  //   artist => artist?.auth._id === user?.id
-  // );
 
   const handleSearch = () => {
     // router.push(`/discover?searchTerm=${encodeURIComponent(searchTerm)}`);
@@ -53,7 +49,16 @@ const ArtistAfterLoginHeader = () => {
     <div>
       <div className="mb-4 flex flex-col justify-center items-center text-center pt-16">
         <Image src={AllImages.logo} width={50} height={50} alt="logo" />
-        <h2 className="text-center md:text-6xl font-bold mt-6 mb-2">
+
+        {/* <Image
+          src={AllImages.logo}
+          width={80}
+          height={80}
+          alt="logo"
+          className="my-10"
+        /> */}
+
+        <h2 className="text-center md:text-5xl font-bold mt-6 mb-2">
           Discover Artists and Studios <br /> Near You
         </h2>
         <Typography.Text className="md:text-xl text-center text-primary mt-3 md:mb-10">
@@ -63,8 +68,14 @@ const ArtistAfterLoginHeader = () => {
 
         <div className="bg-slate-100 rounded-3xl p-2 flex justify-center items-center gap-3">
           <IoLocationOutline className="h-5 w-5 text-primary" />
-          {/* <div className="text-sm">{loggedinUser?.stringLocation}</div> */}
           <div className="text-sm">{user?.stringLocation}</div>
+          <Link
+            href="/profile/update"
+            className="p-1 rounded-full hover:bg-white/80 cursor-pointer transition-colors"
+            aria-label="Edit address"
+          >
+            <FiEdit2 className="h-4 w-4 text-primary" />
+          </Link>
         </div>
 
         {/* Search field */}

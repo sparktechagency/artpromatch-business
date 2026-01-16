@@ -9,6 +9,8 @@ export interface IArtist {
   isConnBusiness: boolean;
   type: TArtistType;
   expertise: ExpertiseType[];
+  flashImages: string[];
+  portfolioImages: string[];
   city: string;
   stripeAccountId: string;
   isStripeReady: boolean;

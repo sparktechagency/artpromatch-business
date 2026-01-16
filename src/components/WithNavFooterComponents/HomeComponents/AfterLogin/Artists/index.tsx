@@ -1,12 +1,11 @@
 'use client';
 
-import { Modal, Select } from 'antd';
+import { Carousel, Modal, Select } from 'antd';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { FaStar } from 'react-icons/fa6';
 import { SiGoogletasks } from 'react-icons/si';
-import Mapview from './MapView';
 import ServiceDetailsModal from './ServiceDetailsModal';
 import { IArtist } from '@/types';
 import { getCleanImageUrl } from '@/lib/getCleanImageUrl';
@@ -15,14 +14,19 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { formatCount } from '@/lib/formatCount';
 import { businessRequestArtist } from '@/services/Request';
 import { toast } from 'sonner';
+import Mapview from './MapView';
 
 type ViewMode = 'list' | 'map';
 const ALL = 'All';
+const ARTIST_TYPES = ['Tattoo Artist', 'Piercer', 'Both'];
 
 const Artists = ({
   data,
 }: {
-  data: { artists: IArtist[]; availableExpertise: string[] };
+  data: {
+    artists: IArtist[];
+    availableExpertise: string[];
+  };
 }) => {
   const { user } = useUser();
   const router = useRouter();
@@ -30,11 +34,11 @@ const Artists = ({
 
   const artists = data?.artists ?? [];
   const availableExpertise = data?.availableExpertise
-    ? [ALL, ...data?.availableExpertise]
-    : [];
+    ? [ALL, ...data.availableExpertise]
+    : [ALL];
 
-  // UI state (match Services UI behavior)
-  const [artistType, setArtistType] = useState<string>(ALL);
+  // UI state
+  const [artistType, setArtistType] = useState<string[]>([]);
   const [tattooCategoriesSelected, setTattooCategoriesSelected] = useState<
     string[]
   >([]);
@@ -43,16 +47,35 @@ const Artists = ({
   const [selectedArtist, setSelectedArtist] = useState<IArtist | null>(null);
   const [isShowServiceModalOpen, setIsShowServiceModalOpen] =
     useState<boolean>(false);
+  const [mounted, setMounted] = useState(false);
 
-  // Sync filters from URL on first load
   useEffect(() => {
-    setArtistType(searchParams.get('artistType') || ALL);
+    setMounted(true);
+  }, []);
 
-    const categoryParam = searchParams.get('tattooCategory');
-    if (categoryParam) {
-      setTattooCategoriesSelected(categoryParam.split(','));
-    } else {
+  // Sync filters from URL on first load (supports favorites default + explicit All)
+  useEffect(() => {
+    const urlArtistType = searchParams.get('artistType');
+    const urlTattooCategory = searchParams.get('tattooCategory');
+
+    // artistType: query > preferred > All
+    setArtistType(urlArtistType ? [urlArtistType] : []);
+
+    // tattooCategory:
+    // - missing => favorites
+    // - 'All' => no filter
+    // - list => parse list
+    if (urlTattooCategory == null) {
       setTattooCategoriesSelected([]);
+    } else if (urlTattooCategory === ALL) {
+      setTattooCategoriesSelected([]);
+    } else {
+      setTattooCategoriesSelected(
+        urlTattooCategory
+          .split(',')
+          .map(s => s.trim())
+          .filter(Boolean)
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -60,7 +83,10 @@ const Artists = ({
   // Apply both filters consistently
   const filteredArtists = useMemo(() => {
     return artists.filter(artist => {
-      const byType = artistType === ALL ? true : artist?.type === artistType;
+      const byType =
+        artistType.length === 0
+          ? true
+          : artistType.includes(artist?.type || '');
 
       const byCategory =
         tattooCategoriesSelected.length === 0
@@ -73,13 +99,13 @@ const Artists = ({
     });
   }, [artists, artistType, tattooCategoriesSelected]);
 
-  const openModal = (id: string) => {
-    const artist = artists.find(a => a._id === id) || null;
+  const openShowServiceModal = (id: string) => {
+    const artist = artists.find(artist => artist._id === id) || null;
     setSelectedArtist(artist);
     setIsShowServiceModalOpen(true);
   };
 
-  // helper function (same as Services: supports multi values)
+  // helper function (safe URL update + explicit All kept)
   const updateQuery = (key: string, values: string[]) => {
     const params = new URLSearchParams(searchParams.toString());
 
@@ -91,10 +117,8 @@ const Artists = ({
 
     const next = `?${params.toString()}`;
     const current = `?${searchParams.toString()}`;
-
     if (next === current) return;
 
-    // ✅ defer navigation out of render phase
     queueMicrotask(() => {
       router.push(next, { scroll: false });
     });
@@ -113,30 +137,39 @@ const Artists = ({
     }
   };
 
-  /* ---------------- UI ---------------- */
   return (
     <div className="bg-slate-50 py-10">
       <div className="container mx-auto px-4">
         {/* Filters */}
         <div className="bg-white rounded-xl p-4 shadow-sm border flex flex-col md:flex-row gap-4 justify-between items-center">
-          <Select
-            value={artistType}
-            style={{ minWidth: 120 }}
-            popupMatchSelectWidth={false}
-            listHeight={200}
-            onChange={(v: string) => {
-              setArtistType(v);
-              updateQuery('artistType', [v]);
-            }}
-            options={['All', 'Tattoo Artist', 'Piercer', 'Both']?.map(t => ({
-              label: t,
-              value: t,
-            }))}
-            className="w-fit"
-          />
+          {mounted ? (
+            <Select
+              mode="multiple"
+              allowClear
+              value={artistType}
+              placeholder="Artist type"
+              style={{ minWidth: 180 }}
+              popupMatchSelectWidth={false}
+              listHeight={200}
+              onChange={(values: string[]) => {
+                setArtistType(values);
+                updateQuery('artistType', values);
+              }}
+              options={ARTIST_TYPES.map(t => ({
+                label: t,
+                value: t,
+              }))}
+              className="w-fit"
+            />
+          ) : (
+            <div
+              className="w-fit rounded-md bg-slate-100"
+              style={{ minWidth: 180, height: 32 }}
+            />
+          )}
 
           <div className="flex flex-wrap gap-2">
-            {availableExpertise?.map(cat => (
+            {availableExpertise.map(cat => (
               <div
                 key={cat}
                 onClick={() => {
@@ -215,23 +248,46 @@ const Artists = ({
                     className="cursor-pointer w-full h-60 object-cover rounded-lg"
                   /> */}
 
-                  <div
+                  {/* full image visible */}
+                  {/* <div
                     onClick={() => openModal(artist._id)}
                     className="w-full h-56 bg-slate-100 flex items-center justify-center cursor-pointer"
                   >
                     <Image
                       src={getCleanImageUrl(artist?.auth?.image)}
                       alt={artist?.auth?.fullName || 'artist'}
-                      width={1000}
-                      height={1000}
+                      width={400}
+                      height={400}
                       quality={90}
                       className="w-full h-full object-contain"
                     />
+                  </div> */}
+
+                  <div
+                    onClick={() => openShowServiceModal(artist._id)}
+                    className="cursor-pointer"
+                  >
+                    <Carousel autoplay>
+                      {(artist?.flashImages?.length
+                        ? artist.flashImages
+                        : [undefined]
+                      ).map((img, i) => (
+                        <div key={`${artist._id}-flash-${i}`}>
+                          <Image
+                            src={getCleanImageUrl(img)}
+                            alt="Service thumbnail"
+                            height={300}
+                            width={500}
+                            className="w-full h-60 object-cover rounded-lg"
+                          />
+                        </div>
+                      ))}
+                    </Carousel>
                   </div>
 
                   <div className="p-4 flex flex-col h-full">
                     <h3 className="text-lg font-semibold">
-                      {artist?.auth?.fullName}{' '}
+                      {artist?.type || ''}{' '}
                       {user?.id === artist?.auth?._id ? '(me)' : ''}
                     </h3>
 
@@ -246,16 +302,15 @@ const Artists = ({
                         height={40}
                         className="rounded-full h-10 w-10 object-cover"
                       />
-                      <span className="text-sm font-medium text-primary">
-                        {artist?.type || ''}
-                      </span>
-                    </Link>
-
-                    {artist?.stringLocation && (
-                      <div className="mt-2 text-xs text-neutral-500">
-                        {artist.stringLocation}
+                      <div className="flex flex-col items-start justify-center gap-1">
+                        <span className="text-sm font-medium text-primary">
+                          {artist?.auth?.fullName}
+                        </span>
+                        <span className="truncate text-xs text-slate-500">
+                          {artist?.stringLocation}
+                        </span>
                       </div>
-                    )}
+                    </Link>
 
                     <div className="flex justify-between items-center mt-4 text-sm text-slate-600">
                       <span>{km}</span>
@@ -274,7 +329,7 @@ const Artists = ({
 
                     {artist?.expertise?.length > 0 && (
                       <div className="flex flex-wrap gap-2 mt-4">
-                        {artist.expertise.map((exp, i) => (
+                        {artist.expertise.slice(0, 3).map((exp, i) => (
                           <span
                             key={`${exp}-${i}`}
                             className="px-3 py-1 text-xs rounded-full bg-primary/10 text-primary"
@@ -282,6 +337,12 @@ const Artists = ({
                             {exp}
                           </span>
                         ))}
+
+                        {artist.expertise.length > 3 && (
+                          <span className="px-3 py-1 text-xs rounded-full bg-slate-100 text-slate-500">
+                            +{artist.expertise.length - 3}
+                          </span>
+                        )}
                       </div>
                     )}
 
@@ -304,7 +365,7 @@ const Artists = ({
           <Mapview artists={filteredArtists} />
         )}
 
-        {/* Modals */}
+        {/* Modal */}
         <Modal
           open={isShowServiceModalOpen}
           footer={null}
@@ -316,8 +377,8 @@ const Artists = ({
           {selectedArtist && (
             <ServiceDetailsModal
               selectedArtist={selectedArtist}
-              artists={artists}
               handleRequestArtist={handleRequestArtist}
+              // onClose={() => setIsShowServiceModalOpen(false)}
             />
           )}
         </Modal>

@@ -383,8 +383,8 @@ const StayUpdated = () => {
   };
 
   return (
-    <div className="py-10 md:py-0 h-[100vh] w-full flex items-center justify-center">
-      <div className="p-8 w-full md:w-[700px]">
+    <div className="py-10 md:py-0 h-screen w-full flex items-center justify-center">
+      <div className="p-8 w-full md:w-175">
         <div className="mb-6 flex flex-col justify-center items-center text-center">
           <Image src={AllImages.logo} width={60} height={60} alt="logo" />
           <h2 className="text-center text-2xl font-bold mt-6 mb-2 text-primary">

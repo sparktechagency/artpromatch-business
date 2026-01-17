@@ -66,7 +66,7 @@ const NewPasswordPage = () => {
   ];
 
   return (
-    <div className="py-16 md:py-0 h-[100vh] w-full flex items-center justify-center">
+    <div className="py-16 md:py-0 h-screen w-full flex items-center justify-center">
       <div className="pt-32 pb-16 w-full max-w-md">
         <Form
           name="new-password"

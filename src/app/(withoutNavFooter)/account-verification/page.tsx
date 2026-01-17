@@ -66,8 +66,8 @@ const AccountVerificationPage = () => {
   if (!userEmail) return null; // ✅ prevent UI flash before redirect
 
   return (
-    <div className="py-16 md:py-0 h-[100vh] w-full flex items-center justify-center">
-      <div className="mx-4 md:mx-0 w-auto md:w-[600px]">
+    <div className="py-16 md:py-0 h-screen w-full flex items-center justify-center">
+      <div className="mx-4 md:mx-0 w-auto md:w-150">
         <div className="py-10 px-5 md:px-14">
           <div className="flex flex-col justify-center items-center">
             <Image src={AllImages.logo} width={50} height={50} alt="logo" />

@@ -69,7 +69,7 @@ const UserTypeSelection = () => {
           </div>
         </div>
 
-        <div className="mt-8 space-y-4 max-w-[440px] mx-auto">
+        <div className="mt-8 space-y-4! max-w-110 mx-auto">
           {roleOptions.map(option => {
             const isSelected = option.value === role;
             return (
@@ -84,7 +84,7 @@ const UserTypeSelection = () => {
                 }`}
               >
                 <span
-                  className={`absolute left-[-36px] top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full border-2 ${
+                  className={`absolute -left-9 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full border-2 ${
                     isSelected
                       ? 'border-[#6a5454] bg-[#6a5454]'
                       : 'border-[#cfbfbf] bg-white'
@@ -109,9 +109,9 @@ const UserTypeSelection = () => {
 
         <button
           onClick={handleNext}
-          className="mt-8 w-full rounded-2xl bg-[#7b5859] py-3 text-base font-semibold text-white transition hover:bg-[#6a4a4b] cursor-pointer"
+          className="mt-8! w-full rounded-2xl bg-[#7b5859] py-3 transition hover:bg-[#6a4a4b] cursor-pointer"
         >
-          Continue
+          <div className="text-base font-semibold text-white">Continue</div>
         </button>
       </div>
     </div>

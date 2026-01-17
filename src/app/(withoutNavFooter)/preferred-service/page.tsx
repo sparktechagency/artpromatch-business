@@ -160,13 +160,13 @@ const PreferredService = () => {
   };
 
   return (
-    <div className="py-16 md:py-0 h-[100vh] w-full flex items-center justify-center">
+    <div className="py-16 md:py-0 h-screen w-full flex items-center justify-center">
       <div className="pt-32 pb-16">
-        <div className="w-[600px]">
+        <div className="w-150">
           <Form
             name="select-user-type"
             layout="vertical"
-            className="mb-10 w-full md:w-[600px] bg-white px-2 rounded-2xl"
+            className="mb-10 w-full md:w-150 bg-white px-2 rounded-2xl"
           >
             <div className="mb-4 flex flex-col justify-center items-center text-center">
               <Image src={AllImages.logo} width={50} height={50} alt="logo" />
@@ -175,10 +175,10 @@ const PreferredService = () => {
                 {role === 'CLIENT'
                   ? 'services are you looking for'
                   : role === 'ARTIST'
-                  ? 'expertises do you have'
-                  : role === 'BUSINESS'
-                  ? 'type of business do you have'
-                  : ''}
+                    ? 'expertises do you have'
+                    : role === 'BUSINESS'
+                      ? 'type of business do you have'
+                      : ''}
                 ?
               </h2>
               <Typography.Text className="text-center text-base">
@@ -347,7 +347,7 @@ const PreferredService = () => {
           {/* Steps */}
           <Steps
             current={current}
-            direction="horizontal"
+            orientation="horizontal"
             size="small"
             items={[
               { title: '', status: 'finish' },

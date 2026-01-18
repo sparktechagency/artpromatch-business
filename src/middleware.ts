@@ -12,6 +12,9 @@ const roleBasedPrivateRoutes = {
     /^\/message/,
     /^\/favourites/,
 
+    /^\/profile/,
+    /^\/profile\/.*/,
+
     /^\/user-type-selection/,
     /^\/preference-selection/,
     /^\/preferences/,
@@ -42,7 +45,7 @@ export const middleware = async (request: NextRequest) => {
       return NextResponse.next();
     } else {
       return NextResponse.redirect(
-        new URL(`/sign-in?redirectPath=${pathname}`, origin)
+        new URL(`/sign-in?redirectPath=${pathname}`, origin),
 
         // `${origin}/sign-in?redirectPath=${pathname}`
 
@@ -121,5 +124,7 @@ export const config = {
     // '/admin/:page',
     // '/user',
     // '/user/:page',
+    '/profile',
+    '/profile/:page',
   ],
 };

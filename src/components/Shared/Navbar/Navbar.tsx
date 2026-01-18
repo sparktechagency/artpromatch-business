@@ -199,7 +199,7 @@ const NavBar = () => {
                 >
                   {item.name} {item?.icon && item?.icon}
                 </Link>
-              )
+              ),
             )}
           </div>
 
@@ -211,10 +211,10 @@ const NavBar = () => {
               </Link> */}
               <IoIosNotificationsOutline
                 onClick={handleNotificationClick}
-                className="cursor-pointer h-5 w-5"
+                className="cursor-pointer h-5 w-5 text-gray-600"
               />
               <Link href="/message" className="relative">
-                <AiOutlineMessage className="h-5 w-5" />
+                <AiOutlineMessage className="h-5 w-5 text-gray-600" />
                 {unreadCount > 0 && (
                   <span className="absolute -top-1 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-semibold text-white shadow-lg">
                     {unreadCount > 99 ? '99+' : unreadCount}
@@ -233,7 +233,7 @@ const NavBar = () => {
 
               <div
                 onClick={handleLogout}
-                className="text-red-500 font-semibold cursor-pointer border border-primary px-10 py-3 rounded-md shadow-lg"
+                className="text-red-500 font-semibold cursor-pointer border border-red-500/50 px-10 py-3 rounded-md shadow-lg"
               >
                 Logout
               </div>
@@ -356,7 +356,7 @@ const NavBar = () => {
                     <span className="text-primary">{item.name}</span>
                   </Link>
                 );
-              }
+              },
             )}
             {user ? (
               <button
